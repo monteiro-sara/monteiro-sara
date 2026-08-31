@@ -6,10 +6,6 @@
 
 </div>
 
-## Languages
-
-<div align="center">
-
 <img src="./languages.svg" width="760" alt="Programming languages used across Sara Monteiro's public GitHub repositories">
 
 </div>
