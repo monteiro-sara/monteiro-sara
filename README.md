@@ -2,7 +2,7 @@
 
 # Sara Monteiro
 
-**Neuroimaging · Neuroinformatics · Data Science · Research Software**
+**Computational Neuroimaging · Neuroinformatics · Data Science · Scientific Software**
 
 </div>
 
