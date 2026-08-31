@@ -1,16 +1,23 @@
-## Hi there 👋
+<div align="center">
 
-<!--
-**monteiro-sara/monteiro-sara** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+# Sara Monteiro
 
-Here are some ideas to get you started:
+**Neuroimaging · Neuroinformatics · Data Science · Research Software**
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+</div>
+
+## Languages
+
+<div align="center">
+
+<img src="./languages.svg" width="760" alt="Programming languages used across Sara Monteiro's public GitHub repositories">
+
+</div>
+
+The chart is generated directly from my public, non-fork repositories and refreshed automatically. It reports both code volume and the number of repositories using each language; Jupyter Notebook is excluded because it is a container format rather than a programming language.
+
+## Current focus
+
+I build reproducible research workflows and software for neuroimaging, clinical data science, and research data management, with an emphasis on transparent methods and usable tools.
+
+[**NIM Studio**](https://github.com/monteiro-sara/NIM-Studio) · [**PET network analysis**](https://github.com/monteiro-sara/PETKLS_3D_Schaefer17_edge_network) · [**Clinical phenotyping**](https://github.com/monteiro-sara/UROFND_UMAP-HDBSCAN)

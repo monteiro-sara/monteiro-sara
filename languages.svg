@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="180" viewBox="0 0 760 180" role="img" aria-label="Language statistics are being generated">
+<style>:root{color-scheme:light dark}.bg{fill:#fff}.t{fill:#1f2328}.m{fill:#656d76}.r{stroke:#d0d7de}@media(prefers-color-scheme:dark){.bg{fill:#0d1117}.t{fill:#f0f6fc}.m{fill:#8b949e}.r{stroke:#30363d}}text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style>
+<rect class="bg" width="760" height="180" rx="12"/>
+<text x="28" y="36" class="t" font-size="17" font-weight="700">LANGUAGES USED</text>
+<line x1="28" y1="70" x2="732" y2="70" class="r"/>
+<text x="28" y="112" class="m" font-size="13">Generating language statistics…</text>
+<text x="28" y="156" class="m" font-size="10">This card will update automatically.</text>
+</svg>
