@@ -1,7 +1,6 @@
 <div align="center">
 
-# Sara Monteiro
-
+# About
 **Computational Neuroimaging · Neuroinformatics · Data Science · Scientific Software**
 
 </div>
