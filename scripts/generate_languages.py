@@ -20,17 +20,17 @@ EXCLUDED = {"Jupyter Notebook"}
 
 # Static technology/tool stack shown on the profile.
 STACK = [
-    ("Python", "#3776AB", "#FFFFFF"),
-    ("Bash / Shell", "#4EAA25", "#FFFFFF"),
-    ("C++", "#00599C", "#FFFFFF"),
-    ("HTML5", "#E34F26", "#FFFFFF"),
-    ("CSS3", "#1572B6", "#FFFFFF"),
-    ("JavaScript", "#F7DF1E", "#111111"),
-    ("Git", "#F05032", "#FFFFFF"),
-    ("Linux", "#FCC624", "#111111"),
-    ("Docker", "#2496ED", "#FFFFFF"),
-    ("Jupyter", "#F37626", "#FFFFFF"),
-    ("GitHub Actions", "#2088FF", "#FFFFFF"),
+    "Python",
+    "Bash",
+    "Shell",
+    "C++",
+    "HTML5",
+    "CSS3",
+    "JavaScript",
+    "Git",
+    "Linux",
+    "Docker",
+    "Jupyter",
 ]
 
 QUERY = """
