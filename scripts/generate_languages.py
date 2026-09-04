@@ -350,52 +350,49 @@ def draw_stats(login, calendar):
     out.append("</svg>")
     return "".join(out)
 
-
 def draw_stack():
-    """Draw a compact, colored technology-stack badge card."""
-    height = 132
+    """Draw a compact GitHub-native technology stack card."""
+    height = 82
+
     out = svg_head(
         height,
         "Technology stack",
-        "Python, Bash and Shell, C++, HTML5, CSS3, JavaScript, Git, Linux, "
-        "Docker, Jupyter, and GitHub Actions.",
+        "Python, Bash, Shell, C++, HTML5, CSS3, JavaScript, Git, Linux, Docker, Jupyter.",
     )
 
     out.extend(
         [
-            '<text x="4" y="28" class="ink" font-size="22" font-weight="600">stack</text>',
-            '<line x1="72" y1="21" x2="756" y2="21" class="grid" stroke-width="1"/>',
+            '<text x="4" y="27" class="ink" font-size="22" font-weight="600">stack</text>',
+            '<line x1="72" y1="20" x2="756" y2="20" class="grid" stroke-width="1"/>',
         ]
     )
 
-    x, y = 4, 55
-    gap_x, gap_y = 8, 12
-    badge_h = 27
+    x = 4
+    y = 48
+    gap = 5
+    badge_h = 28
 
-    # Slightly generous monospaced approximation; badges wrap automatically.
-    for label, fill, text_fill in STACK:
-        badge_w = max(58, 18 + len(label) * 7.2)
-
-        if x + badge_w > WIDTH - 4:
-            x = 4
-            y += badge_h + gap_y
+    for label in STACK:
+        badge_w = max(54, 20 + len(label) * 7.1)
 
         safe_label = html.escape(label)
+
         out.extend(
             [
                 (
-                    f'<rect x="{x:.1f}" y="{y:.1f}" width="{badge_w:.1f}" '
-                    f'height="{badge_h}" rx="6" fill="{fill}"/>'
+                    f'<rect x="{x:.1f}" y="{y:.1f}" '
+                    f'width="{badge_w:.1f}" height="{badge_h}" '
+                    f'class="stack-badge"/>'
                 ),
                 (
-                    f'<text x="{x + badge_w / 2:.1f}" y="{y + 18:.1f}" '
-                    f'fill="{text_fill}" font-size="11" font-weight="600" '
+                    f'<text x="{x + badge_w / 2:.1f}" y="{y + 18.5:.1f}" '
+                    f'class="stack-text" font-size="11" font-weight="600" '
                     f'text-anchor="middle">{safe_label}</text>'
                 ),
             ]
         )
 
-        x += badge_w + gap_x
+        x += badge_w + gap
 
     out.append("</svg>")
     return "".join(out)
