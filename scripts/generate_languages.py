@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate contribution and language SVGs for a GitHub profile README."""
+"""Generate contribution, language, and stack SVGs for a GitHub profile README."""
 
 import html
 import json
@@ -11,8 +11,27 @@ from datetime import date, datetime, timezone
 
 API = "https://api.github.com/graphql"
 WIDTH = 760
-STATS_START = date(2026, 3, 1)
+
+# Stats are calculated over all of 2026, while the daily chart starts in March.
+YEAR_START = date(2026, 1, 1)
+CHART_START = date(2026, 3, 1)
+
 EXCLUDED = {"Jupyter Notebook"}
+
+# Static technology/tool stack shown on the profile.
+STACK = [
+    ("Python", "#3776AB", "#FFFFFF"),
+    ("Bash / Shell", "#4EAA25", "#FFFFFF"),
+    ("C++", "#00599C", "#FFFFFF"),
+    ("HTML5", "#E34F26", "#FFFFFF"),
+    ("CSS3", "#1572B6", "#FFFFFF"),
+    ("JavaScript", "#F7DF1E", "#111111"),
+    ("Git", "#F05032", "#FFFFFF"),
+    ("Linux", "#FCC624", "#111111"),
+    ("Docker", "#2496ED", "#FFFFFF"),
+    ("Jupyter", "#F37626", "#FFFFFF"),
+    ("GitHub Actions", "#2088FF", "#FFFFFF"),
+]
 
 QUERY = """
 query($login: String!, $from: DateTime!, $to: DateTime!, $after: String) {
@@ -64,10 +83,7 @@ def request(token, variables):
 
 def collect(login, token):
     today = datetime.now(timezone.utc).date()
-    start = STATS_START
-
-    if today < start:
-        start = today
+    start = YEAR_START if today >= YEAR_START else today
 
     common = {
         "login": login,
@@ -149,85 +165,137 @@ def svg_head(height, title, description):
     ]
 
 
+def flatten_days(calendar):
+    return [
+        d
+        for week in calendar["weeks"]
+        for d in week["contributionDays"]
+    ]
+
+
+def contribution_summary(calendar):
+    """Return 2026 totals and peak day/week/month statistics."""
+    days = flatten_days(calendar)
+    counts = [int(d["contributionCount"]) for d in days]
+
+    total = int(calendar.get("totalContributions", sum(counts)))
+    active = sum(v > 0 for v in counts)
+    peak_day = max(counts, default=0)
+
+    weekly = [
+        sum(int(d["contributionCount"]) for d in week["contributionDays"])
+        for week in calendar["weeks"]
+    ]
+    peak_week = max(weekly, default=0)
+
+    monthly = defaultdict(int)
+    for d in days:
+        dt = date.fromisoformat(d["date"])
+        monthly[(dt.year, dt.month)] += int(d["contributionCount"])
+
+    if monthly:
+        peak_month_key, peak_month = max(monthly.items(), key=lambda item: item[1])
+        peak_month_name = date(peak_month_key[0], peak_month_key[1], 1).strftime("%b")
+    else:
+        peak_month, peak_month_name = 0, ""
+
+    return {
+        "total": total,
+        "active": active,
+        "peak_month": peak_month,
+        "peak_month_name": peak_month_name,
+        "peak_week": peak_week,
+        "peak_day": peak_day,
+    }
+
+
 def draw_stats(login, calendar):
     """
-    Draw a daily contribution chart.
+    Draw 2026 summary statistics plus a daily chart beginning 1 March 2026.
 
-    Each calendar day gets its own vertical stem + dot. Heights use square-root
-    scaling so normal 10–20 contribution days remain visible even when there is
-    a much larger outlier day.
+    The daily chart uses square-root scaling so normal 10–20 contribution days
+    remain visually meaningful even when a much larger outlier day is present.
     """
     height = 220
     left, right = 4, WIDTH - 4
     chart_left, chart_right = 4, WIDTH - 4
-    chart_top, base = 118, 196
+    chart_top, base = 122, 196
     chart_height = base - chart_top
 
+    stats = contribution_summary(calendar)
+
     days = [
-        d
-        for week in calendar["weeks"]
-        for d in week["contributionDays"]
-        if date.fromisoformat(d["date"]) >= STATS_START
+        d for d in flatten_days(calendar)
+        if date.fromisoformat(d["date"]) >= CHART_START
     ]
 
     if not days:
-        days = [{"date": STATS_START.isoformat(), "contributionCount": 0}]
+        days = [{"date": CHART_START.isoformat(), "contributionCount": 0}]
 
-    counts = [int(d["contributionCount"]) for d in days]
-    total = sum(counts)
-    active = sum(v > 0 for v in counts)
-    peak = max(counts) if counts else 0
-
-    # Prevent division by zero while keeping a sensible scale.
-    scale_peak = max(peak, 1)
-
-    # Daily points fill the width. With ~6 months of data this leaves enough
-    # horizontal room for each day to remain visually distinct.
+    chart_counts = [int(d["contributionCount"]) for d in days]
+    chart_peak = max(chart_counts, default=0)
+    scale_peak = max(chart_peak, 1)
     step = (chart_right - chart_left) / max(len(days) - 1, 1)
 
-    start_label = STATS_START.strftime("%b %Y")
-    title = f"{total} contributions since {start_label}"
+    title = f"{stats['total']} contributions in 2026"
     description = (
-        f"{active} active days and a peak day of {peak} contributions. "
-        "Daily stem-and-dot heights use square-root scaling."
+        f"{stats['active']} active days, peak month {stats['peak_month']} "
+        f"({stats['peak_month_name']}), peak week {stats['peak_week']}, "
+        f"and peak day {stats['peak_day']}. Daily chart begins Mar 2026."
     )
 
     out = svg_head(height, title, description)
 
-    # Summary text
+    # Main 2026 total on the left.
     out.extend(
         [
-            f'<text x="{left}" y="52" class="ink" font-size="54" font-weight="600">{total}</text>',
+            (
+                f'<text x="{left}" y="52" class="ink" font-size="54" '
+                f'font-weight="600">{stats["total"]}</text>'
+            ),
             (
                 f'<text x="{left}" y="78" class="muted" font-size="13">'
-                f'contributions since {start_label}</text>'
-            ),
-            (
-                f'<text x="{right}" y="29" class="ink" font-size="22" '
-                f'font-weight="600" text-anchor="end">{active}</text>'
-            ),
-            (
-                f'<text x="{right}" y="49" class="muted" font-size="11" '
-                'text-anchor="end">active days</text>'
-            ),
-            (
-                f'<text x="{right}" y="78" class="ink" font-size="22" '
-                f'font-weight="600" text-anchor="end">{peak}</text>'
-            ),
-            (
-                f'<text x="{right}" y="98" class="muted" font-size="11" '
-                'text-anchor="end">peak day</text>'
+                "contributions in 2026</text>"
             ),
         ]
     )
 
-    # Baseline
+    # Four compact stat blocks on the right, all next to one another.
+    stat_blocks = [
+        (stats["active"], "active days", ""),
+        (stats["peak_month"], "peak month", stats["peak_month_name"]),
+        (stats["peak_week"], "peak week", ""),
+        (stats["peak_day"], "peak day", ""),
+    ]
+
+    first_x = 392
+    block_w = 91
+
+    for i, (value, label, sublabel) in enumerate(stat_blocks):
+        x = first_x + i * block_w
+
+        out.append(
+            f'<text x="{x}" y="42" class="ink" font-size="22" '
+            f'font-weight="600" text-anchor="middle">{value}</text>'
+        )
+        out.append(
+            f'<text x="{x}" y="63" class="muted" font-size="9.5" '
+            f'text-anchor="middle">{label}</text>'
+        )
+
+        if sublabel:
+            out.append(
+                f'<text x="{x}" y="79" class="muted" font-size="9" '
+                f'text-anchor="middle">{sublabel}</text>'
+            )
+
+    # Daily chart baseline.
     out.append(
         f'<line x1="{chart_left}" y1="{base}" x2="{chart_right}" y2="{base}" '
         'class="grid" stroke-width="1"/>'
     )
 
-    # Month separators + month labels
+    # Month separators + labels.
     previous_month = None
 
     for i, day in enumerate(days):
@@ -249,8 +317,7 @@ def draw_stats(login, calendar):
             )
             previous_month = month_key
 
-    # Daily stems + dots
-    # Square-root scaling compresses the extreme outlier without hiding it.
+    # Daily stems + dots.
     for i, day in enumerate(days):
         count = int(day["contributionCount"])
         if count <= 0:
@@ -259,9 +326,6 @@ def draw_stats(login, calendar):
         x = chart_left + i * step
         scaled = (count / scale_peak) ** 0.5
         y = base - max(2.0, scaled * chart_height)
-
-        # Very small dots can disappear at GitHub README scale, so use a
-        # slightly larger radius for higher-count days.
         radius = 1.6 + min(1.8, 1.8 * scaled)
 
         out.extend(
@@ -282,6 +346,56 @@ def draw_stats(login, calendar):
                 "</g>",
             ]
         )
+
+    out.append("</svg>")
+    return "".join(out)
+
+
+def draw_stack():
+    """Draw a compact, colored technology-stack badge card."""
+    height = 132
+    out = svg_head(
+        height,
+        "Technology stack",
+        "Python, Bash and Shell, C++, HTML5, CSS3, JavaScript, Git, Linux, "
+        "Docker, Jupyter, and GitHub Actions.",
+    )
+
+    out.extend(
+        [
+            '<text x="4" y="28" class="ink" font-size="22" font-weight="600">stack</text>',
+            '<line x1="72" y1="21" x2="756" y2="21" class="grid" stroke-width="1"/>',
+        ]
+    )
+
+    x, y = 4, 55
+    gap_x, gap_y = 8, 12
+    badge_h = 27
+
+    # Slightly generous monospaced approximation; badges wrap automatically.
+    for label, fill, text_fill in STACK:
+        badge_w = max(58, 18 + len(label) * 7.2)
+
+        if x + badge_w > WIDTH - 4:
+            x = 4
+            y += badge_h + gap_y
+
+        safe_label = html.escape(label)
+        out.extend(
+            [
+                (
+                    f'<rect x="{x:.1f}" y="{y:.1f}" width="{badge_w:.1f}" '
+                    f'height="{badge_h}" rx="6" fill="{fill}"/>'
+                ),
+                (
+                    f'<text x="{x + badge_w / 2:.1f}" y="{y + 18:.1f}" '
+                    f'fill="{text_fill}" font-size="11" font-weight="600" '
+                    f'text-anchor="middle">{safe_label}</text>'
+                ),
+            ]
+        )
+
+        x += badge_w + gap_x
 
     out.append("</svg>")
     return "".join(out)
@@ -374,6 +488,9 @@ def main():
 
     if write_if_changed("languages.svg", draw_languages(login, totals, repo_counts)):
         changed.append("languages.svg")
+
+    if write_if_changed("stack.svg", draw_stack()):
+        changed.append("stack.svg")
 
     print("updated: " + (", ".join(changed) if changed else "nothing"))
 
