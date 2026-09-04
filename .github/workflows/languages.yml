@@ -22,7 +22,11 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Generate profile graphics
         env:
@@ -42,4 +46,4 @@ jobs:
 
           git add stats.svg languages.svg stack.svg
           git commit -m "stats: refresh profile graphics"
-          git push
+          git push origin HEAD:main
