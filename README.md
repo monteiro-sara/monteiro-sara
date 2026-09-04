@@ -5,13 +5,8 @@
 
 </div>
 
+<img src="./stack.svg" width="760" alt="Technology stack">
+
 <img src="./languages.svg" width="760" alt="Programming languages used across Sara Monteiro's public GitHub repositories">
 
-</div>
-
-
-</div>
-
-<img src="./stats.svg" width="760" alt="Contributions in the last year">
-
-</div>
+<img src="./stats.svg" width="760" alt="GitHub contributions and activity statistics for 2026">
