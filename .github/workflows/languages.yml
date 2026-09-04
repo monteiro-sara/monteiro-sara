@@ -1,4 +1,4 @@
-name: Refresh language profile
+name: Refresh profile graphics
 
 on:
   schedule:
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: refresh-profile-languages
+  group: refresh-profile-graphics
   cancel-in-progress: false
 
 jobs:
@@ -30,16 +30,16 @@ jobs:
           GH_LOGIN: ${{ github.repository_owner }}
         run: python3 scripts/generate_languages.py
 
-      - name: Commit updated card
+      - name: Commit updated graphics
         run: |
-          if git diff --quiet -- stats.svg languages.svg; then
-            echo "No profile-stat changes"
+          if git diff --quiet -- stats.svg languages.svg stack.svg; then
+            echo "No profile-graphic changes"
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add stats.svg languages.svg
+          git add stats.svg languages.svg stack.svg
           git commit -m "stats: refresh profile graphics"
           git push
