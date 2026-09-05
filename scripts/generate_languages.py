@@ -146,9 +146,6 @@ def svg_head(height, title, description):
             ".dot{fill:#1f2328}"
             ".grid{stroke:#d8dee4}"
             ".track{fill:#eaeef2}"
-            ".stack-badge{fill:#f6f8fa;stroke:#d0d7de;stroke-width:1}"
-            ".stack-text{fill:#24292f;letter-spacing:.15px}"
-            ".stack-dot{fill:#2da44e}"
             "@media(prefers-color-scheme:dark){"
             ".bg{fill:#0d1117}"
             ".ink{fill:#f0f6fc}"
@@ -159,9 +156,6 @@ def svg_head(height, title, description):
             ".dot{fill:#f0f6fc}"
             ".grid{stroke:#30363d}"
             ".track{fill:#30363d}"
-            ".stack-badge{fill:#161b22;stroke:#30363d}"
-            ".stack-text{fill:#e6edf3}"
-            ".stack-dot{fill:#3fb950}"
             "}"
             'text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'
             '"Liberation Mono",monospace}'
@@ -398,14 +392,14 @@ def draw_stack():
             [
                 (
                     f'<rect x="{x}" y="{y}" width="{badge_w}" height="{badge_h}" '
-                    'rx="7" class="stack-badge"/>'
+                    'rx="7" class="track" stroke="#8c959f" stroke-width="1"/>'
                 ),
                 (
                     f'<circle cx="{dot_x}" cy="{y + 15}" r="2.5" '
-                    'class="stack-dot"/>'
+                    'fill="#2da44e"/>'
                 ),
                 (
-                    f'<text x="{text_x}" y="{y + 19}" class="stack-text" '
+                    f'<text x="{text_x}" y="{y + 19}" class="ink" '
                     f'font-size="10.5" font-weight="600" text-anchor="middle">'
                     f'{safe_label}</text>'
                 ),
