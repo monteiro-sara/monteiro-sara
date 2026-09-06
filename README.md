@@ -4,6 +4,9 @@
 **Computational Modelling · Neuroimaging · Neuroinformatics · Data Science · Scientific Software · Science Illustration**
 
 </div>
+
+<img src="./ascii-cycle-footer.svg" width="760" alt="Animated ASCII research footer">
+
 <img src="./stats.svg" width="760" alt="GitHub contributions and activity statistics for 2026">
 
 <img src="./stack.svg" width="760" alt="Technology stack">
