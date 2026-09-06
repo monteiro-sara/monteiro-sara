@@ -1,6 +1,6 @@
 <div align="center">
 
-# About
+# ♆
 **Computational Modelling · Neuroimaging · Neuroinformatics · Data Science · Scientific Software · Science Illustration**
 
 </div>
