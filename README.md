@@ -5,7 +5,7 @@
 
 </div>
 
-<img src="./ascii-cycle-footer.svg" width="760" alt="Animated ASCII research footer">
+<img src="./cycle-footer.svg" width="760" alt="Animated ASCII research footer">
 
 <img src="./stats.svg" width="760" alt="GitHub contributions and activity statistics for 2026">
 
