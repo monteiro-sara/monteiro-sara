@@ -65,6 +65,8 @@ def request(token, variables):
         headers={
             "Authorization": f"bearer {token}",
             "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
             "User-Agent": "profile-stat-graphics",
         },
     )
@@ -82,13 +84,14 @@ def request(token, variables):
 
 
 def collect(login, token):
-    today = datetime.now(timezone.utc).date()
+    now = datetime.now(timezone.utc)
+    today = now.date()
     start = YEAR_START if today >= YEAR_START else today
 
     common = {
         "login": login,
         "from": f"{start}T00:00:00Z",
-        "to": f"{today}T23:59:59Z",
+        "to": now.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
     }
 
     totals, repo_counts = defaultdict(int), defaultdict(int)

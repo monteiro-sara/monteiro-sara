@@ -2,7 +2,8 @@ name: Refresh profile graphics
 
 on:
   schedule:
-    - cron: "23 5 * * *"
+    - cron: "0 0,12,17,21 * * *"
+      timezone: "Europe/Paris"
   workflow_dispatch:
   push:
     paths:
